@@ -1,5 +1,4 @@
 name: CI
-
 on:
   push:
     branches: [ master, main ]
@@ -66,7 +65,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage
-          path: **/TestResults/*/coverage.cobertura.xml
+          path: "**/TestResults/*/coverage.cobertura.xml"
 
   gitleaks-only:
     if: ${{ github.event_name == 'workflow_dispatch' }}
