@@ -43,13 +43,15 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Restore
-        run: dotnet restore
+        run: dotnet restore MetaModel.Example.sln --ignore-failed-sources
 
-      - name: Build
-        run: dotnet build --no-restore --configuration Release
+      - name: Build (Library + Tests only)
+        run: |
+          dotnet build MetaModel.Example/MetaModel.Example.csproj --configuration Release
+          dotnet build MetaModel.Example.Tests/MetaModel.Example.Tests.csproj --configuration Release
 
       - name: Test
-        run: dotnet test --no-build --configuration Release --logger trx --collect:"XPlat Code Coverage"
+        run: dotnet test MetaModel.Example.Tests/MetaModel.Example.Tests.csproj --configuration Release --logger trx --collect:"XPlat Code Coverage"
 
       - name: Publish Test Results
         if: always()

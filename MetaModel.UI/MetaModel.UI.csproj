@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
+  <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
@@ -8,12 +8,19 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(OS)' != 'Windows_NT' ">
+    <!-- Prevent build on Linux/macOS CI -->
+    <TargetFramework>net10.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <NoBuild>true</NoBuild>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\MetaModel.Example\MetaModel.Example.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <!-- MahApps.Metro UI library -->
+  <ItemGroup Condition=" '$(OS)' == 'Windows_NT' ">
+    <!-- MahApps.Metro UI library only on Windows -->
     <PackageReference Include="MahApps.Metro" Version="2.4.9" />
   </ItemGroup>
 
