@@ -43,7 +43,9 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Restore
-        run: dotnet restore MetaModel.Example.sln --ignore-failed-sources
+        run: |
+          dotnet restore MetaModel.Example/MetaModel.Example.csproj --ignore-failed-sources
+          dotnet restore MetaModel.Example.Tests/MetaModel.Example.Tests.csproj --ignore-failed-sources
 
       - name: Build (Library + Tests only)
         run: |
