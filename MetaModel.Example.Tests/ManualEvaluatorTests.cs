@@ -22,6 +22,24 @@ public class ManualEvaluatorTests
     }
 
     [Fact]
+    public void Evaluate_AdditionAndMultiplication_ReturnsCorrrect()
+    {
+        // Arrange
+        var ctx = new EvaluationContext();
+
+        INode root = new AddNode(
+            new MultiplyNode(new NumberNode(2), new NumberNode(3)),
+            new MultiplyNode(new NumberNode(4), new NumberNode(5))
+        );
+        // Act
+        var result = Evaluator.Evaluate(root, ctx);
+
+        // Assert
+        var number = Assert.IsType<NumberNode>(result);
+        Assert.Equal(26, number.Value);
+    }
+
+    [Fact]
     public void Evaluate_AddPrecedence_2_plus_3_times_4_Returns_14()
     {
         // Arrange
