@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="MetaModel.Example.Tests/MetaModel.Example.Tests.csproj" />
+  <Project Path="MetaModel.Example/MetaModel.Example.csproj" />
+  <Project Path="MetaModel.UI/MetaModel.UI.csproj" />
+</Solution>

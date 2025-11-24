@@ -1,0 +1,266 @@
+﻿<mah:MetroWindow x:Class="MetaModel.UI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+        mc:Ignorable="d"
+        Title="MetaModel Script Builder" Height="600" Width="1000">
+    <TabControl>
+        <!-- Builder Tab -->
+        <TabItem Header="Builder">
+            <Grid Margin="10" ColumnDefinitions="Auto,*" RowDefinitions="*">
+                <!-- Existing builder UI (shortened for brevity) -->
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Width="360" Margin="0,0,10,0">
+                    <StackPanel>
+                        <!-- ...existing builder controls... -->
+                        <TextBlock Text="Add Step" FontWeight="Bold" Margin="0,0,0,10" FontSize="16" />
+
+                        <!-- ASSIGN STEP -->
+                        <!-- Creates a variable and assigns a numeric or variable value to it -->
+                        <Border BorderBrush="Gray" BorderThickness="0,0,0,1" Padding="0,0,0,8" Margin="0,0,0,10">
+                            <StackPanel>
+                                <TextBlock Text="Assign Variable" FontWeight="Bold" />
+                                <StackPanel Orientation="Horizontal" Margin="0,6,0,0" VerticalAlignment="Center">
+                                    <StackPanel Width="95">
+                                        <TextBlock Text="Variable Name" FontSize="11" />
+                                        <TextBox x:Name="AssignVarName" ToolTip="Name of the variable to create or overwrite" />
+                                    </StackPanel>
+                                    <StackPanel Width="115" Margin="6,0,0,0">
+                                        <TextBlock Text="Value" FontSize="11" />
+                                        <TextBox x:Name="AssignValue" ToolTip="Number literal or another variable name" />
+                                    </StackPanel>
+                                    <Button Content="Add" Click="OnAddAssign" Margin="10,16,0,0" ToolTip="Add an assignment step" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- OPERATION STEP -->
+                        <!-- Performs an arithmetic operation between two operands and stores the result -->
+                        <Border BorderBrush="Gray" BorderThickness="0,0,0,1" Padding="0,0,0,8" Margin="0,0,0,10">
+                            <StackPanel>
+                                <TextBlock Text="Arithmetic Operation" FontWeight="Bold" />
+                                <StackPanel Orientation="Horizontal" Margin="0,6,0,0" VerticalAlignment="Center">
+                                    <StackPanel Width="80">
+                                        <TextBlock Text="Left" FontSize="11" />
+                                        <TextBox x:Name="OpLeft" ToolTip="Left operand: number or variable" />
+                                    </StackPanel>
+                                    <StackPanel Width="70" Margin="6,0,0,0">
+                                        <TextBlock Text="Operator" FontSize="11" />
+                                        <ComboBox x:Name="OpType" ToolTip="Arithmetic operator">
+                                            <ComboBoxItem>+</ComboBoxItem>
+                                            <ComboBoxItem>-</ComboBoxItem>
+                                            <ComboBoxItem>*</ComboBoxItem>
+                                            <ComboBoxItem>/</ComboBoxItem>
+                                        </ComboBox>
+                                    </StackPanel>
+                                    <StackPanel Width="80" Margin="6,0,0,0">
+                                        <TextBlock Text="Right" FontSize="11" />
+                                        <TextBox x:Name="OpRight" ToolTip="Right operand: number or variable" />
+                                    </StackPanel>
+                                    <Button Content="Add" Click="OnAddOperation" Margin="10,16,0,0" ToolTip="Add an operation step" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- CHAINED EXPRESSION BUILDER -->
+                        <!-- Allows chaining multiple operations referencing assigned variable values -->
+                        <Border BorderBrush="Gray" BorderThickness="0,0,0,1" Padding="0,0,0,10" Margin="0,0,0,10">
+                            <StackPanel>
+                                <TextBlock Text="Chained Expression" FontWeight="Bold" />
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <StackPanel Width="120">
+                                        <TextBlock Text="Start Operand" FontSize="11" />
+                                        <TextBox x:Name="ChainStart" ToolTip="First value or variable of the expression" />
+                                    </StackPanel>
+                                    <StackPanel Width="90" Margin="10,0,0,0">
+                                        <TextBlock Text="Target Var" FontSize="11" />
+                                        <TextBox x:Name="ChainTargetVar" ToolTip="Variable name to store result (optional)" />
+                                    </StackPanel>
+                                    <Button Content="Reset" Margin="10,16,0,0" Click="OnChainClear" ToolTip="Clear current chain" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,8,0,0" VerticalAlignment="Center">
+                                    <StackPanel Width="90">
+                                        <TextBlock Text="Operator" FontSize="11" />
+                                        <ComboBox x:Name="ChainOp" ToolTip="Operator to apply to current result">
+                                            <ComboBoxItem>+</ComboBoxItem>
+                                            <ComboBoxItem>-</ComboBoxItem>
+                                            <ComboBoxItem>*</ComboBoxItem>
+                                            <ComboBoxItem>/</ComboBoxItem>
+                                        </ComboBox>
+                                    </StackPanel>
+                                    <StackPanel Width="120" Margin="6,0,0,0">
+                                        <TextBlock Text="Next Operand" FontSize="11" />
+                                        <TextBox x:Name="ChainNextOperand" ToolTip="Number or variable; can reuse any previously assigned variable" />
+                                    </StackPanel>
+                                    <Button Content="Add Segment" Margin="10,16,0,0" Click="OnChainAddSegment" ToolTip="Append operator and operand to chain" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                                    <CheckBox x:Name="ChainSimplify" Content="Auto-simplify constants" ToolTip="Reduce constant sub-expressions when finalizing" />
+                                </StackPanel>
+                                <TextBlock Text="Chain Preview:" Margin="0,8,0,2" FontWeight="Bold" FontSize="12" />
+                                <Border BorderBrush="#CCC" BorderThickness="1" Padding="6" CornerRadius="3">
+                                    <TextBlock x:Name="ChainPreview" Text="(empty)" TextWrapping="Wrap" ToolTip="Live textual representation of the chained expression" />
+                                </Border>
+                                <TextBlock Text="Segments:" Margin="0,8,0,2" FontWeight="Bold" FontSize="12" />
+                                <ListBox x:Name="ChainList" Height="110" ToolTip="Sequence of added operator/operand segments" />
+                                <Button Content="Finalize Expression" Margin="0,10,0,0" Height="32" Click="OnChainFinalize" ToolTip="Add the chained expression as a step (assignment if target variable specified)" />
+                            </StackPanel>
+                        </Border>
+
+                        <!-- CONDITIONAL STEP (IF) with mode selection -->
+                        <!-- Evaluates a comparison; branches can now contain a value, an operation, or an assignment of an operation/value -->
+                        <Border BorderBrush="Gray" BorderThickness="0,0,0,1" Padding="0,0,0,12" Margin="0,0,0,10">
+                            <StackPanel>
+                                <TextBlock Text="Conditional (If)" FontWeight="Bold" />
+                                <!-- Condition row -->
+                                <StackPanel Orientation="Horizontal" Margin="0,6,0,4" VerticalAlignment="Center">
+                                    <StackPanel Width="70">
+                                        <TextBlock Text="Left" FontSize="11" />
+                                        <TextBox x:Name="CondLeft" ToolTip="Left side of comparison" />
+                                    </StackPanel>
+                                    <StackPanel Width="70" Margin="6,0,0,0">
+                                        <TextBlock Text="Operator" FontSize="11" />
+                                        <ComboBox x:Name="CondOp" ToolTip="Comparison operator">
+                                            <ComboBoxItem>==</ComboBoxItem>
+                                            <ComboBoxItem>&gt;</ComboBoxItem>
+                                        </ComboBox>
+                                    </StackPanel>
+                                    <StackPanel Width="70" Margin="6,0,0,0">
+                                        <TextBlock Text="Right" FontSize="11" />
+                                        <TextBox x:Name="CondRight" ToolTip="Right side of comparison" />
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <!-- Then branch mode -->
+                                <TextBlock Text="Then Branch" FontWeight="Bold" Margin="0,4,0,2" FontSize="12" />
+                                <ComboBox x:Name="ThenMode" SelectionChanged="OnThenModeChanged" Width="160" Margin="0,0,0,4">
+                                    <ComboBoxItem Content="Value" />
+                                    <ComboBoxItem Content="Operation" />
+                                    <ComboBoxItem Content="Operation+Assign" />
+                                </ComboBox>
+                                <!-- Then value panel -->
+                                <StackPanel x:Name="ThenValuePanel" Orientation="Horizontal" Margin="0,2,0,0">
+                                    <StackPanel Width="120">
+                                        <TextBlock Text="Value" FontSize="11" />
+                                        <TextBox x:Name="ThenValue" ToolTip="Literal or variable (ignored if op fields filled)" />
+                                    </StackPanel>
+                                </StackPanel>
+                                <!-- Then operation panel -->
+                                <StackPanel x:Name="ThenOpPanel" Orientation="Horizontal" Margin="0,2,0,0" Visibility="Collapsed">
+                                    <StackPanel Width="80">
+                                        <TextBlock Text="Left" FontSize="11" />
+                                        <TextBox x:Name="ThenLeft" ToolTip="Left operand" />
+                                    </StackPanel>
+                                    <StackPanel Width="60" Margin="6,0,0,0">
+                                        <TextBlock Text="Op" FontSize="11" />
+                                        <ComboBox x:Name="ThenOp" ToolTip="Operator">
+                                            <ComboBoxItem>+</ComboBoxItem>
+                                            <ComboBoxItem>-</ComboBoxItem>
+                                            <ComboBoxItem>*</ComboBoxItem>
+                                            <ComboBoxItem>/</ComboBoxItem>
+                                        </ComboBox>
+                                    </StackPanel>
+                                    <StackPanel Width="80" Margin="6,0,0,0">
+                                        <TextBlock Text="Right" FontSize="11" />
+                                        <TextBox x:Name="ThenRight" ToolTip="Right operand" />
+                                    </StackPanel>
+                                </StackPanel>
+                                <!-- Then assign panel -->
+                                <StackPanel x:Name="ThenAssignPanel" Orientation="Horizontal" Margin="0,2,0,0" Visibility="Collapsed">
+                                    <StackPanel Width="120">
+                                        <TextBlock Text="Assign Var" FontSize="11" />
+                                        <TextBox x:Name="ThenAssignVar" ToolTip="Store branch result into this variable" />
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <!-- Else branch mode -->
+                                <TextBlock Text="Else Branch" FontWeight="Bold" Margin="8,6,0,2" FontSize="12" />
+                                <ComboBox x:Name="ElseMode" SelectionChanged="OnElseModeChanged" Width="160" Margin="0,0,0,4">
+                                    <ComboBoxItem Content="Value" />
+                                    <ComboBoxItem Content="Operation" />
+                                    <ComboBoxItem Content="Operation+Assign" />
+                                </ComboBox>
+                                <!-- Else value panel -->
+                                <StackPanel x:Name="ElseValuePanel" Orientation="Horizontal" Margin="0,2,0,0">
+                                    <StackPanel Width="120">
+                                        <TextBlock Text="Value" FontSize="11" />
+                                        <TextBox x:Name="ElseValue" ToolTip="Literal or variable (ignored if op fields filled)" />
+                                    </StackPanel>
+                                </StackPanel>
+                                <!-- Else operation panel -->
+                                <StackPanel x:Name="ElseOpPanel" Orientation="Horizontal" Margin="0,2,0,0" Visibility="Collapsed">
+                                    <StackPanel Width="80">
+                                        <TextBlock Text="Left" FontSize="11" />
+                                        <TextBox x:Name="ElseLeft" ToolTip="Left operand" />
+                                    </StackPanel>
+                                    <StackPanel Width="60" Margin="6,0,0,0">
+                                        <TextBlock Text="Op" FontSize="11" />
+                                        <ComboBox x:Name="ElseOp" ToolTip="Operator">
+                                            <ComboBoxItem>+</ComboBoxItem>
+                                            <ComboBoxItem>-</ComboBoxItem>
+                                            <ComboBoxItem>*</ComboBoxItem>
+                                            <ComboBoxItem>/</ComboBoxItem>
+                                        </ComboBox>
+                                    </StackPanel>
+                                    <StackPanel Width="80" Margin="6,0,0,0">
+                                        <TextBlock Text="Right" FontSize="11" />
+                                        <TextBox x:Name="ElseRight" ToolTip="Right operand" />
+                                    </StackPanel>
+                                </StackPanel>
+                                <!-- Else assign panel -->
+                                <StackPanel x:Name="ElseAssignPanel" Orientation="Horizontal" Margin="0,2,0,0" Visibility="Collapsed">
+                                    <StackPanel Width="120">
+                                        <TextBlock Text="Assign Var" FontSize="11" />
+                                        <TextBox x:Name="ElseAssignVar" ToolTip="Store branch result into this variable" />
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <!-- Add conditional -->
+                                <Button Content="Add Conditional" Click="OnAddConditional" Margin="0,10,0,0" Height="32" ToolTip="Add conditional step with branch expressions/assignments" />
+                            </StackPanel>
+                        </Border>
+
+                        <!-- EXECUTION -->
+                        <StackPanel Margin="0,0,0,10">
+                            <Button Content="Run Script" Height="40" Click="OnRunScript" ToolTip="Execute all steps and show the final result" />
+                            <TextBlock x:Name="ResultText" Margin="0,10,0,0" FontSize="14" FontWeight="Bold" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+                <StackPanel Grid.Column="1">
+                    <TextBlock Text="Steps" FontWeight="Bold" FontSize="14" />
+                    <ListBox x:Name="StepsList" Margin="0,6,0,4" MouseDoubleClick="OnRemoveStepDoubleClick" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Remove Selected" Width="120" Click="OnRemoveSelectedStep" />
+                        <Button Content="Clear All" Width="100" Margin="8,0,0,0" Click="OnClearAllSteps" />
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </TabItem>
+
+        <!-- Parser Tab -->
+        <TabItem Header="Parser">
+            <Grid Margin="10" RowDefinitions="Auto,Auto,*,Auto" ColumnDefinitions="*">
+                <TextBlock Text="Script Parser" FontWeight="Bold" FontSize="16" />
+                <TextBlock Grid.Row="1" Text="Enter a semicolon-separated script (e.g. a=1; b=2; c=a+b;)." Margin="0,6,0,6" TextWrapping="Wrap" />
+                <Grid Grid.Row="2" RowDefinitions="*" ColumnDefinitions="2*,*" Margin="0,0,0,10">
+                    <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                        <TextBlock Text="Input Script" FontWeight="Bold" />
+                        <TextBox x:Name="ParserInput" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Height="300" TextWrapping="Wrap" />
+                        <Button Content="Parse _Run" Margin="0,8,0,0" Height="32" Click="OnParseRunScript" />
+                        <Button Content="Clear" Margin="0,4,0,0" Height="26" Click="OnClearParsed" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="Parsed Steps" FontWeight="Bold" />
+                        <ListBox x:Name="ParsedStepsList" Height="220" />
+                        <TextBlock Text="Result" FontWeight="Bold" Margin="0,8,0,2" />
+                        <TextBlock x:Name="ParsedResultText" Height="60" TextWrapping="Wrap" />
+                    </StackPanel>
+                </Grid>
+                <TextBlock Grid.Row="3" Text="Errors" FontWeight="Bold" />
+                <TextBox Grid.Row="3" x:Name="ParserErrors" Margin="60,0,0,0" IsReadOnly="True" BorderThickness="1" Height="60" TextWrapping="Wrap" />
+            </Grid>
+        </TabItem>
+    </TabControl>
+</mah:MetroWindow>

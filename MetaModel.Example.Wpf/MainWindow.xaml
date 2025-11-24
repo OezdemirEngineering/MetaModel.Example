@@ -1,0 +1,53 @@
+<Window x:Class="MetaModel.Example.Wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="MetaModel Script Builder" Height="600" Width="900">
+    <Grid Margin="10" ColumnDefinitions="Auto,*" RowDefinitions="*">
+        <StackPanel Width="260" Margin="0,0,10,0">
+            <TextBlock Text="Add Step" FontWeight="Bold" Margin="0,0,0,8"/>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                <TextBox x:Name="AssignVarName" Width="60" PlaceholderText="var" />
+                <TextBox x:Name="AssignValue" Width="80" Margin="6,0,0,0" PlaceholderText="value" />
+                <Button Content="Add Assign" Click="OnAddAssign" Margin="6,0,0,0" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                <TextBox x:Name="OpLeft" Width="60" PlaceholderText="left" />
+                <ComboBox x:Name="OpType" Width="70">
+                    <ComboBoxItem>+</ComboBoxItem>
+                    <ComboBoxItem>-</ComboBoxItem>
+                    <ComboBoxItem>*</ComboBoxItem>
+                    <ComboBoxItem>/</ComboBoxItem>
+                </ComboBox>
+                <TextBox x:Name="OpRight" Width="60" Margin="6,0,0,0" PlaceholderText="right" />
+                <Button Content="Add Op" Click="OnAddOperation" Margin="6,0,0,0" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                <TextBox x:Name="CondLeft" Width="50" PlaceholderText="left" />
+                <ComboBox x:Name="CondOp" Width="70">
+                    <ComboBoxItem>==</ComboBoxItem>
+                    <ComboBoxItem>&gt;</ComboBoxItem>
+                </ComboBox>
+                <TextBox x:Name="CondRight" Width="50" Margin="6,0,0,0" PlaceholderText="right" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                <TextBox x:Name="ThenValue" Width="60" PlaceholderText="then" />
+                <TextBox x:Name="ElseValue" Width="60" Margin="6,0,0,0" PlaceholderText="else" />
+                <Button Content="Add If" Click="OnAddConditional" Margin="6,0,0,0" />
+            </StackPanel>
+            <Separator Margin="0,8,0,8" />
+            <TextBlock Text="Functions" FontWeight="Bold" />
+            <StackPanel Orientation="Horizontal" Margin="0,4,0,4">
+                <TextBox x:Name="FuncName" Width="80" PlaceholderText="name" />
+                <TextBox x:Name="FuncArgs" Width="120" Margin="6,0,0,0" PlaceholderText="args csv" />
+                <Button Content="Add Call" Click="OnAddFunctionCall" Margin="6,0,0,0" />
+            </StackPanel>
+            <Separator Margin="0,8,0,8" />
+            <Button Content="Run Script" Click="OnRunScript" Height="35" />
+            <TextBlock x:Name="ResultText" Margin="0,8,0,0" FontSize="14" FontWeight="Bold" />
+        </StackPanel>
+        <ListBox x:Name="StepsList" Grid.Column="1" />
+    </Grid>
+</Window>
